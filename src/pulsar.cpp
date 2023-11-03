@@ -23,10 +23,11 @@ int open_file(string fileName) {
     // Use um loop para ler e imprimir cada linha do arquivo
     while (getline(file, line)) {
         //cout << line << endl;
-        text += line;
+        text += line + '\n';
+        //cout << text << endl;
     }
 
-    text += "<EOF>";
+    text += "{EOF}";
 
     // Feche o arquivo após a leitura
     file.close();
@@ -39,12 +40,29 @@ int main(int argc, char const *argv[])
     bool running = true;
 
     if (argc > 1) {
-        open_file(argv[1]);
-        vector<string> lexer = lex(text);
-        parse(lexer);
-    } else {
-        while (running)
-        {
+        string check;
+        string fileName = argv[1];
+        bool isType = false;
+        for(int i = 0; i < fileName.size(); i++) {
+            if (fileName[i] == '.') {
+                isType = true;
+            }
+
+            if (isType) {
+                check += fileName[i];
+            }
+        }
+        if (check == ".ps") {
+            open_file(argv[1]);
+            vector<string> lexer = lex(text);
+            parse(lexer);
+        }
+        else {
+            cout << "Incorrect file type. Try again with a .ps file";
+        }
+    }
+    else {
+        while (running) {
             cout << "pulsar > ";
             getline(cin, text);
             vector<string> lexer = lex(text);
